@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=VT323&display=swap');
+
+body,
+html {
+    font-family: 'Bai Jamjuree', sans-serif;
+    font-size: 12pt;
+    background-color: #ffffff;
+    background-image: url("light-aluminum.png");
+    text-transform: uppercase;
+}
+
+.lcd {
+    font-family: 'DS-Digital', monospace;
+    color: red;
+    text-shadow: 0px 0px 2px red;
+    background-color: #110000;
+    padding: 0px 0.3em;
+}
+
+td.lcd {
+    font-family: 'DS-Digital', monospace;
+    color: red !important;
+    text-shadow: 0px 0px 2px red !important;
+    background-color: #110000 !important;
+    font-size: 24px;
+
+}
+
+td.lcd.yellow {
+    font-family: 'DS-Digital', monospace;
+    color: #F90 !important;
+    text-shadow: 0px 0px 2px #F90 !important;
+    background-color: #110000 !important;
+
+}
+
+
+.table-lcd,
+.table-lcd td,
+.table-lcd th,
+.table-lcd tr {
+    background-color: black !important;
+}
+
+/*
+.table-lcd tr:hover td{
+    color: #0F6 !important;
+    text-shadow: 0px 0px 2px #0F6 !important;
+}
+*/
+
+.midi-logo {
+    height: 24px;
+}
+
+.midi {
+    background-image: url("midi-port.svg");
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: cover;
+    height: 24px;
+    width: 24px;
+    margin-top: 0px;
+    opacity: 0.5;
+}
+
+.negative {
+    filter: invert(1);
+}
+
+.receiving {
+    opacity: 1;
+}
+
+th,
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.off {
+    opacity: 0.25;
+}
+
+.pedal {
+    font-family: 'Bai Jamjuree', sans-serif !important;
+    color: #ffffff !important;
+    text-shadow: none;
+}
+
+.outline {
+    border: white 1px solid;
+    border-radius: 0.2em;
+    padding: 0.2em;
+    white-space: nowrap;
+    color: white;
+}
+
+.outline-fill {
+    background: white;
+    color: black;
+}
+
+input[type=number] {
+    background: black;
+    color: red !important;
+    text-shadow: 0 0 2px red;
+    padding: 0px;
+    margin: 0px;
+    border: none !important;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: none !important;
+}
+
+.yellow input[type=number] {
+    background: black;
+    color: #F90 !important;
+    text-shadow: 0 0 2px #F90;
+}
+
+.blue input[type=number] {
+    background: black;
+    color: #0FC !important;
+    text-shadow: 0 0 2px #0FC;
+}
+
+td.lcd.blue {
+    color: #0FC !important;
+    text-shadow: 0 0 2px #0FC !important;
+}
+
+input[type=number]:focus {
+    background: black;
+    color: #0F6 !important;
+    text-shadow: 0 0 2px #0F6;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.context-cursor {
+    cursor: copy !important;
+}
+
+.card {
+    font-family: 'Roboto', sans-serif;
+}
+
+.card-img-1 {
+    background-image: url('chrome-sysex-prompt.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 200px;
+}
+
+.card-img-2 {
+    background-image: url('fcb1010-front.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 200px;
+}
+
+.card-img-3 {
+    background-image: url('pc-midi.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 200px;
+}
+
+select {
+    color: #0fC !important;
+    text-shadow: 0 0 2px #0fc;
+    background-color: #000000 !important;
+    font-family: "VT323", monospace;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-style: normal;
+    width: 150px!important;
+}
+
+th {
+    background-image: url("gravel.png");
+}
+
+
+.lcd-screen{
+    font-family: "VT323", monospace !important;
+    font-family: 'Bai Jamjuree', sans-serif;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-style: normal;
+    background-size: 5px 5px;
+    background: black !important;
+    text-shadow: 0 0 2px #0FC !important;
+    color:#0FC!important;
+    font-size:24px;
+}
+
+.dash-animation {
+    animation: dash-animation 1s infinite;
+}
+
+@keyframes dash-animation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.screen {
+    width: 100vw;
+    height: calc(100vh - 56px);
+    background-size: 100% 100%;
+    background-image: url('retro-pc.gif');
+    background-repeat: no-repeat;
+    background-color: black;
+    background-position: center bottom;
+    position: relative;
+}
+
+.gif {
+    background-image: url('fcb1010-connection.gif');
+}
+
+
+.screen table{
+    z-index:1010;
+    position: absolute;
+}
+
+.gif-overlay {
+    position: absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    background-image: url('stripes.jpg');
+    background-size: 20px auto;
+    opacity:0.2;
+}
+
+.manual{
+    position:absolute;
+    width:20%;
+    min-height:20%;
+    /*
+    font-family: "VT323", monospace !important;
+    font-family: 'Bai Jamjuree', sans-serif;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-style: normal;
+    text-shadow: 0 0 2px #0FC !important;
+    color:#0FC!important;
+    font-size:24px;
+    */
+}
+
+.manual-1{
+
+    right:15%;
+    top:50%;
+    animation: m1-animation 33s infinite;
+}
+
+@keyframes m1-animation {
+    0% {
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+}
+
+.manual-2{
+    right:40%;
+    top:50%;
+    animation: m2-animation 33s infinite;
+}
+
+@keyframes m2-animation {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+}
+
+
+.manual-3{
+    right:40%;
+    top:20%;
+    animation: m3-animation 33s infinite;
+}
+
+@keyframes m3-animation {
+    0% {
+        opacity: 0;
+    }
+    45% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.manual-4{
+    left:15%;
+    top:50%;
+    animation: m4-animation 33s infinite;
+}
+
+.rectangle{
+    position:absolute;
+    border:#0FC 3px solid;
+}
+
+@keyframes m4-animation {
+    0% {
+        opacity: 0;
+    }
+    75% {
+        opacity: 0;
+    }
+    80% {
+        opacity: 1;
+    }
+}
+
+.audiowide {
+    font-family: "Audiowide", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .increment-buttons button {
+    border-radius: 0px;
+    border: none;
+    width: 100%;
+    height: 100%;
+    font-size: 24px;
+    font-family: 'DS-Digital';
+}
+
+.increment-buttons th {
+    padding: 0px;
+    margin: 0px;
+}
