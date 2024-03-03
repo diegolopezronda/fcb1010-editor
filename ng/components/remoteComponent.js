@@ -317,6 +317,7 @@ angular.module('fcb1010EditorApp').component("remoteComponent", {
 			access.inputs.forEach(function (input) {
 				input.onmidimessage = function (event) {
 					$scope.$apply(function () {
+						if(event.data[0] != 240) return;
 						$scope.is_receiving = true;
 						var sysex = fcb1010Service.decode(event.data);
 						if (sysex != null){

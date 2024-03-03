@@ -18495,10 +18495,10 @@ angular.module('fcb1010EditorApp').service("fcb1010Service", function () {
 			switch_2_down: false,
 			merge: false,
 			running_status: false,
-			expression_1_min: 0,
-			expression_1_max: 127,
-			expression_2_min: 0,
-			expression_2_max: 127
+			expression_1_min: 8,
+			expression_1_max: 255,
+			expression_2_min: 8,
+			expression_2_max: 255
 		};
 
 		for (var a = 0; a < 10; a++) {

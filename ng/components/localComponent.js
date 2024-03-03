@@ -160,21 +160,263 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 <td>
                     <button 
 						data-bs-toggle="popover" 
-						data-bs-title="{{popovers.help.message.title}}"
-						data-bs-content="{{popovers.help.message.content}}"
+						data-bs-title="{{popovers.test.message.title}}"
+						data-bs-content="{{popovers.test.message.content}}"
 						data-bs-placement="bottom" 
 						data-bs-trigger="hover"
 						class="btn btn-outline-light btn-sm text-uppercase" 
-						ng-click="toggleHelp()"
+						ng-click="toggleTest()"
 					>
-						{{popover ? "ON" : "OFF"}}
+						{{test_mode ? "ON" : "OFF"}}
 					</button>
                 </td>
             </tr>
-            <tr>
-                <td colspan="7">
-                    <div class="container-fluid">
-
+            <tr ng-show="test_mode">
+                <td colspan="7" class="fcb1010-test">
+                    <div class="container-fluid bg-dark">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-light" ng-click="getMidiOutDevices()"
+                                                data-bs-toggle="popover" 
+                                                data-bs-title="{{popovers.viewer.refresh.title}}"
+                                                data-bs-content="{{popovers.viewer.refresh.content}}" 
+                                                data-bs-placement="bottom"
+                                                data-bs-trigger="hover">
+                                                <i class="fa-solid fa-refresh"></i>
+                                            </button>
+                                            <select data-bs-toggle="popover" 
+                                            data-bs-title="{{popovers.viewer.midi_out.title}}"
+                                                data-bs-content="{{popovers.viewer.midi_out.content}}" 
+                                                data-bs-placement="bottom"
+                                                data-bs-trigger="hover" 
+                                                class="form-select" ng-model="midi_out_test"
+                                                ng-options="item as item.name for item in midi_out_devices"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <span class="mt-2 w-100 badge text-uppercase align-middle" ng-class="{'text-bg-danger' : test_device.switch_1,'border border-danger text-danger' : !test_device.switch_1}">Switch 1</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span class="mt-2 w-100 badge text-uppercase align-middle" ng-class="{'text-bg-danger' : test_device.switch_2,'border border-danger text-danger' : !test_device.switch_2}">Switch 2</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span class="mt-2 w-100 badge text-uppercase align-middle" ng-class="{'text-bg-success' : sysex.direct_select,'border border-success text-success' : !sysex.direct_select}">Direct Select</span>
+                                    </div>
+                                    <div class="col-1 lcd fs-3 p-0">
+                                    0{{test_device.bank}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(5,true)" ng-mouseup="testPreset(5,false)">
+                                            <div class="d-flex justify-content-between">
+                                                <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 5,'text-dark':test_device.preset != 5}"></i>
+                                                <div class="w-100">
+                                                    <h6 class="m-0">CNT 1</h6>
+                                                    <h6 class="badge text-bg-light m-0 w-100">SYSEX SEND</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">6</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(6,true)" ng-mouseup="testPreset(6,false)">
+                                            <div class="d-flex justify-content-between">
+                                                <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 6,'text-dark':test_device.preset != 6}"></i>
+                                                <div class="w-100">
+                                                    <h6 class="m-0">CNT 2</h6>
+                                                    <h6 class="badge text-bg-light m-0 w-100">SYSEX RCV</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">7</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(7,true)" ng-mouseup="testPreset(7,false)">
+                                            <div class="d-flex justify-content-between">
+                                                <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 7,'text-dark':test_device.preset != 7}"></i>
+                                                <div class="w-100">
+                                                    <h6 class="m-0">EXP A</h6>
+                                                    <h6 class="badge text-bg-light m-0 w-100">MERGE</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">8</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(8,true)" ng-mouseup="testPreset(8,false)">
+                                            <div class="d-flex justify-content-between">
+                                            <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 8,'text-dark':test_device.preset != 8}"></i>
+                                            <div class="w-100">
+                                                <h6 class="m-0">EXP B</h6>
+                                                <h6 class="badge text-bg-light m-0 w-100">RUNNING ST</h6>
+                                            </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">9</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(9,true)" ng-mouseup="testPreset(9,false)">
+                                            <div class="d-flex justify-content-between">
+                                            <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 9,'text-dark':test_device.preset != 9}"></i>
+                                            <div class="w-100">
+                                                <h6 class="m-0">NOTE</h6>
+                                                <h6 class="m-0 badge text-bg-dark w-100">DIRECT SELECT</h6>
+                                            </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">
+                                                <span class="fcb1010-transparent-number">1</span>0
+                                            </h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-click="testBank(true)">
+                                            <h6 class="m-0 badge text-bg-light w-100">SWITCH 1</h6>
+                                            <h1 class="fcb1010-text">
+                                                UP
+                                            </h1>
+                                            <h6 class="m-0 badge text-bg-light w-100">ENTER</h6>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(0,true)" ng-mouseup="testPreset(0,false)">
+                                            <div class="d-flex justify-content-between">
+                                                    <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 0,'text-dark':test_device.preset != 0}"></i>                                                <div class="w-100">
+                                                    <h6 class="m-0">PROG CHG 1</h6>
+                                                    <h6 class="badge border border-light m-0 w-100">SWITCH 1</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">1</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(1,true)" ng-mouseup="testPreset(1,false)">
+                                            <div class="d-flex justify-content-between">
+                                                    <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 1,'text-dark':test_device.preset != 1}"></i>                                                <div class="w-100">
+                                                    <h6 class="m-0">PROG CHG 2</h6>
+                                                    <h6 class="badge border border-light m-0 w-100">SWITCH 2</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">2</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(2,true)" ng-mouseup="testPreset(2,false)">
+                                            <div class="d-flex justify-content-between">
+                                                     <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 2,'text-dark':test_device.preset != 2}"></i>                                                <div class="w-100">
+                                                    <h6 class="m-0">PROG CHG 3</h6>
+                                                    <h6 class="m-0">&nbsp;</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">3</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(3,true)" ng-mouseup="testPreset(3,false)">
+                                            <div class="d-flex justify-content-between">
+                                                     <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 3,'text-dark':test_device.preset != 3}"></i>                                                <div class="w-100">
+                                                    <h6 class="m-0">PROG CHG 4</h6>
+                                                    <h6 class="m-0">&nbsp;</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">4</h1>
+                                        </button>
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-mousedown="testPreset(4,true)" ng-mouseup="testPreset(4,false)">
+                                            <div class="d-flex justify-content-between">
+                                            <i class="fa-solid fa-circle" ng-class="{'text-danger':test_device.preset == 4,'text-dark':test_device.preset != 4}"></i>                                                <div class="w-100">
+                                                    <h6 class="m-0">PROG CHG 5</h6>
+                                                    <h6 class="m-0 badge text-bg-light">COPY PRESET</h6>
+                                                </div>
+                                            </div>
+                                            <h1 class="fcb1010-number">5</h1>
+                                        </button>    
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                    </div>
+                                    <div class="col-1 p-0 m-0">
+                                        <button class="btn btn-outline-light fcb1010-button w-100" ng-click="testBank(false)">
+                                            <h6 class="m-0 badge text-bg-light w-100">SWITCH 2</h6>
+                                            <h1 class="fcb1010-text">
+                                                DOWN
+                                            </h1>
+                                            <h6 class="m-0 badge text-bg-light w-100">ESCAPE</h6>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row mb-3">
+                                    <div class="col-2 m-0 p-0">
+                                    </div>
+                                    <div class="col-4 m-0 p-0">
+                                        <span class="mt-2 w-100 badge bg-black text-light text-uppercase align-middle">EXPRESSION PEDAL A</span>
+                                    </div>
+                                    <div class="col-1 m-0 p-0">
+                                    </div>
+                                    <div class="col-4 m-0 p-0">
+                                        <span class="mt-2 w-100 badge bg-black text-light text-uppercase align-middle">EXPRESSION PEDAL B</span>
+                                    </div>
+                                    <div class="col-1 m-0 p-0">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2 m-0 p-0">
+                                    </div>
+                                    <div class="col-4 m-0 p-0">
+                                        <button class="btn btn-outline-light fcb1010-button-expression w-100">
+                                            <h1 class="fcb1010-text-expression text-danger" style="opacity:{{(test_expression_b*0.7874015748)/100}}">
+                                                {{test_device.expression_1}}
+                                            </1>
+                                        </button>
+                                        <input ng-model="test_device.expression_1" type="range" class="form-range" id="customRange1 min="{{sysex.expression_1_min}}" max="{{sysex.expression_1_max}}" step="1" ng-change="testExpression(false)"/>
+                                    </div>
+                                    <div class="col-1 m-0 p-0">
+                                    </div>
+                                    <div class="col-4 m-0 p-0">
+                                        <button 
+                                            class="btn btn-outline-light 
+                                            fcb1010-button-expression w-100"
+                                            
+                                        >
+                                            <h1 class="fcb1010-text-expression text-danger" style="opacity:{{(test_expression_b*0.7874015748)/100}}">
+                                                {{test_device.expression_2}}
+                                            </h1>
+                                        </button>
+                                        <input ng-model="test_device.expression_2" type="range" class="form-range" id="customRange1 min="{{sysex.expression_2_min}}" max="{{sysex.expression_2_max}}" step="1" ng-change="testExpression(true)"/>
+                                    </div>
+                                    <div class="col-1 m-0 p-0">
+                                    </div>
+                            </div>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -287,28 +529,28 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     data-bs-title="{{popovers.global.expression_1_min.title}}"
                         data-bs-content="{{popovers.global.expression_1_min.content}}"
                         data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
-                        ng-model="sysex.expression_1_min" min="0" max="255" step="1">
+                        ng-model="sysex.expression_1_min" min="0" max="{{sysex.expression_1_max}}" step="1">
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_1_max.title}}"
                         data-bs-content="{{popovers.global.expression_1_max.content}}"
                         data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
-                        ng-model="sysex.expression_1_max" min="0" max="255" step="1">
+                        ng-model="sysex.expression_1_max" min="{{sysex.expression_1_min}}" max="255" step="1">
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_2_min.title}}"
                         data-bs-content="{{popovers.global.expression_2_min.content}}"
                         data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
-                        ng-model="sysex.expression_2_min" min="0" max="255" step="1">
+                        ng-model="sysex.expression_2_min" min="0" max="{{sysex.expression_2_max}}" step="1">
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_2_max.title}}"
                         data-bs-content="{{popovers.global.expression_2_max.content}"
                         data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
-                        ng-model="sysex.expression_2_max" min="0" max="255" step="1">
+                        ng-model="sysex.expression_2_max" min="{{sysex.expression_2_min}}" max="255" step="1">
                 </td>
             </tr>
         </tbody>
@@ -1131,7 +1373,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-danger text-uppercase" data-bs-dismiss="modal"
-                        ng-click="send()" ng-disabled="!midi_out || fcb1010_configuration_form.$invalid">
+                        ng-click="sendSysex()" ng-disabled="!midi_out || fcb1010_configuration_form.$invalid">
                         Send
                     </button>
                 </div>
@@ -1197,6 +1439,12 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 message: {
                     title: "Help",
                     content: "Click this button to toggle explanatory popovers like this when hovering on the editor components."
+                }
+            },
+            test: {
+                message: {
+                    title: "Test",
+                    content: "Click to show a virtual recreation of the FCB1010, so you can test before reconfiguring the physical device."
                 }
             },
             global: {
@@ -1468,7 +1716,9 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         $scope.power_mode = false;
         $scope.bank_power_mode = false;
         $scope.increment_mode = false;
+        $scope.test_mode = false;
         $scope.midi_out = null;
+        $scope.midi_out_test = null;
         $scope.midi_out_devices = [];
         $scope.midiAccess = null;
         $scope.default_settings = fcb1010Service.DEFAULT_SETTINGS;
@@ -1477,6 +1727,17 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         $scope.increment_hover = null;
         $scope.popover = false;
         $scope.popover_triggers = [];
+        $scope.test_device = {
+            bank:0,
+            preset:null,
+            expression_1:null,
+            expression_2:null,
+            switch_1:false,
+            switch_2:false,
+            expression_1_old:null,
+            expression_2_old:null,
+            control:true
+        }
 
         INCREMENT_CONTROLS = [
             "program_1",
@@ -1542,6 +1803,105 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             source: "Editor",
             message: "Configuration sent to FCB1010. Press and hold 'DOWN' to load it (this will exit configuration mode)."
         };
+
+        $scope.toggleTest = function(){
+            $scope.test_mode = !$scope.test_mode;
+        } 
+
+        $scope.testExpression = function(expression_2){
+            if($scope.test_device.bank == null) return;
+            if($scope.test_device.preset == null) return;
+            var x = "expression_"+(1+expression_2);
+            var preset = $scope.sysex.banks[$scope.test_device.bank][$scope.test_device.preset][x];
+            if(!preset.on) return;
+            var value = Math.floor(
+                $scope.test_device[x]*((preset.value_2-preset.value_1)/($scope.sysex[x+"_max"]-$scope.sysex[x+"_min"]))
+            )+preset.value_1;
+            value = value > 127 ? 127 : value;
+            value = value < 0 ? 0 : value;
+            var data = new Uint8Array([(176+$scope.sysex[x+"_channel"]),preset.value_0,value]);
+            var running_status = $scope.sysex.running_status;
+            if(running_status && $scope.test_device[x+"_old"] == value) return;
+            $scope.test_device[x+"_old"] = value;
+            $scope.send(data);
+        }
+
+        $scope.testPreset = function(preset,mouse_down){
+            $scope.test_device.preset = preset;
+            var preset = $scope.sysex.banks[$scope.test_device.bank][preset];
+            if(!mouse_down){
+                if(preset.note.on){
+                    var data = new Uint8Array([144+$scope.sysex.note_channel,preset.note.value_0,0]);
+                    $scope.send(data);
+                }
+                $scope.test_device.switch_1 = false;
+                $scope.test_device.switch_2 = false;
+                return;
+            }
+            var controller_toggle = 
+                $scope.sysex.control_1_channel == $scope.sysex.control_2_channel
+                && preset.control_1.on 
+                && preset.control_2.on
+                && preset.control_1.value_0 == preset.control_2.value_0
+            ;
+            if(preset.switch_1.on){
+                $scope.test_device.switch_1 = true;
+            }
+            if(preset.switch_2.on){
+                $scope.test_device.switch_2 = true;
+            }
+            if(preset.program_1.on){
+                var data = new Uint8Array([192+$scope.sysex.program_1_channel,preset.program_1.value_0]);
+                $scope.send(data);
+            }
+            if(preset.program_2.on){
+                var data = new Uint8Array([192+$scope.sysex.program_2_channel,preset.program_2.value_0]);
+                $scope.send(data);
+            }
+            if(preset.program_3.on){
+                var data = new Uint8Array([192+$scope.sysex.program_3_channel,preset.program_3.value_0]);
+                $scope.send(data);
+            }
+            if(preset.program_4.on){
+                var data = new Uint8Array([192+$scope.sysex.program_4_channel,preset.program_4.value_0]);
+                $scope.send(data);
+            }
+            if(preset.program_5.on){
+                var data = new Uint8Array([192+$scope.sysex.program_5_channel,preset.program_5.value_0]);
+                $scope.send(data);
+            }
+            if(controller_toggle){
+                var value = $scope.test_device.control ? preset.control_1.value_1 : preset.control_2.value_1;
+                $scope.test_device.control = !$scope.test_device.control;
+                var data = new Uint8Array([176+$scope.sysex.control_1_channel,preset.control_1.value_0,value]);
+                $scope.send(data);
+            }else{
+                if(preset.control_1.on){
+                    var data = new Uint8Array([176+$scope.sysex.control_1_channel,preset.control_1.value_0,preset.control_1.value_1]);
+                    $scope.send(data);
+                }
+                if(preset.control_2.on){
+                    var data = new Uint8Array([176+$scope.sysex.control_2_channel,preset.control_2.value_0,preset.control_2.value_1]);
+                    $scope.send(data);
+                }
+            }        
+            if(preset.note.on){
+                var data = new Uint8Array([144+$scope.sysex.note_channel,preset.note.value_0,64]);
+                $scope.send(data);
+            }
+        }
+
+        $scope.testBank= function(up){
+            var bank = $scope.test_device.bank;
+            bank += (up ? 1 : -1);
+            bank = bank > 9 ? 0 : bank;
+            bank = bank < 0 ? 9 : bank;
+            $scope.test_device.bank = bank;
+            $scope.test_device.preset = null;
+            $scope.test_device.expression_1_old =null;
+            $scope.test_device.expression_2_old =null;
+            $scope.test_device.control = true;
+        }
 
         $scope.showModal = function () {
             var modal = new bootstrap.Modal(document.getElementById('sysex-send-modal'));
@@ -1675,14 +2035,23 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             $rootScope.toast = REMOTE_SYSEX_READ_SUCCESS;
         }
 
-        $scope.send = function () {
+        $scope.sendSysex = function () {
             var data = fcb1010Service.encode($scope.sysex);
+            var result = $scope.send(data);
+            if(result){
+                $rootScope.toast = SEND_SUCCESS;
+            }
+        }
+
+        $scope.send = function (data) {
+            var result = false;
             $scope.midiAccess.outputs.forEach(function (output) {
                 if (output.id == $scope.midi_out.id) {
                     output.send(data);
-                    $rootScope.toast = SEND_SUCCESS;
+                    result = true; 
                 }
             });
+            return result;
         }
 
         $scope.getMidiOutDevices = function () {
@@ -1694,6 +2063,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 });
             });
             $scope.midi_out = $scope.midi_out_devices[0];
+            $scope.midi_out_test = $scope.midi_out_devices[0];
         }
 
         $scope.saveJSON = function () {

@@ -41,7 +41,7 @@ td.lcd.yellow {
 .table-lcd td,
 .table-lcd th,
 .table-lcd tr {
-    background-color: black !important;
+    background-color: black;
 }
 
 /*
@@ -359,4 +359,54 @@ th {
 .increment-buttons th {
     padding: 0px;
     margin: 0px;
+}
+
+.fcb1010-button{
+    height:11vw;
+    padding-bottom:7vw;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+.fcb1010-button-expression{
+    height:22.53vw;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+.fcb1010-number{
+    font-size:3rem;
+    font-weight: bold;  
+    margin:0px;
+    padding:0px; 
+    line-height:3rem;
+}
+
+.fcb1010-text{
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin:0px;
+    padding:0px;
+    line-height: 1rem;
+}
+
+.fcb1010-text-expression{
+    font-size: 4rem;
+    font-weight: bold;
+    margin:0px;
+    padding:0px;
+}
+
+.fcb1010-transparent-number{
+    color:black;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: white;
+}
+
+.fcb1010-button h6{
+    font-size:0.3rem;
+}
+
+.fcb1010-test{
+    background: rgb(33, 37, 41)!important;
 }
