@@ -1823,7 +1823,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             var running_status = $scope.sysex.running_status;
             if(running_status && $scope.test_device[x+"_old"] == value) return;
             $scope.test_device[x+"_old"] = value;
-            $scope.send(data);
+            $scope.send(data,false);
         }
 
         $scope.testPreset = function(preset,mouse_down){
@@ -1832,7 +1832,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             if(!mouse_down){
                 if(preset.note.on){
                     var data = new Uint8Array([144+$scope.sysex.note_channel,preset.note.value_0,0]);
-                    $scope.send(data);
+                    $scope.send(data,false);
                 }
                 $scope.test_device.switch_1 = false;
                 $scope.test_device.switch_2 = false;
@@ -1852,42 +1852,42 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             }
             if(preset.program_1.on){
                 var data = new Uint8Array([192+$scope.sysex.program_1_channel,preset.program_1.value_0]);
-                $scope.send(data);
+                $scope.send(data,false);
             }
             if(preset.program_2.on){
                 var data = new Uint8Array([192+$scope.sysex.program_2_channel,preset.program_2.value_0]);
-                $scope.send(data);
+                $scope.send(data,false);
             }
             if(preset.program_3.on){
                 var data = new Uint8Array([192+$scope.sysex.program_3_channel,preset.program_3.value_0]);
-                $scope.send(data);
+                $scope.send(data,false);
             }
             if(preset.program_4.on){
                 var data = new Uint8Array([192+$scope.sysex.program_4_channel,preset.program_4.value_0]);
-                $scope.send(data);
+                $scope.send(data,false);
             }
             if(preset.program_5.on){
                 var data = new Uint8Array([192+$scope.sysex.program_5_channel,preset.program_5.value_0]);
-                $scope.send(data);
+                $scope.send(data,false);
             }
             if(controller_toggle){
                 var value = $scope.test_device.control ? preset.control_1.value_1 : preset.control_2.value_1;
                 $scope.test_device.control = !$scope.test_device.control;
                 var data = new Uint8Array([176+$scope.sysex.control_1_channel,preset.control_1.value_0,value]);
-                $scope.send(data);
+                $scope.send(data,false);
             }else{
                 if(preset.control_1.on){
                     var data = new Uint8Array([176+$scope.sysex.control_1_channel,preset.control_1.value_0,preset.control_1.value_1]);
-                    $scope.send(data);
+                    $scope.send(data,false);
                 }
                 if(preset.control_2.on){
                     var data = new Uint8Array([176+$scope.sysex.control_2_channel,preset.control_2.value_0,preset.control_2.value_1]);
-                    $scope.send(data);
+                    $scope.send(data,false);
                 }
             }        
             if(preset.note.on){
                 var data = new Uint8Array([144+$scope.sysex.note_channel,preset.note.value_0,64]);
-                $scope.send(data);
+                $scope.send(data,false);
             }
         }
 
@@ -2037,16 +2037,17 @@ angular.module('fcb1010EditorApp').component("localComponent", {
 
         $scope.sendSysex = function () {
             var data = fcb1010Service.encode($scope.sysex);
-            var result = $scope.send(data);
+            var result = $scope.send(data,true);
             if(result){
                 $rootScope.toast = SEND_SUCCESS;
             }
         }
 
-        $scope.send = function (data) {
+        $scope.send = function (data,fcb1010) {
             var result = false;
+            var device = fcb1010 ? $scope.midi_out : $scope.midi_out_test;
             $scope.midiAccess.outputs.forEach(function (output) {
-                if (output.id == $scope.midi_out.id) {
+                if (output.id == device.id) {
                     output.send(data);
                     result = true; 
                 }
