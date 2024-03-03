@@ -1,25 +1,37 @@
 angular.module('fcb1010EditorApp').component("localComponent", {
+    bindings:{
+        editor:'<'
+    },
+    controllerAs:'$ctrl',
     template: `
-    <div class="container-fluid mt-2">
-    
+    <screen-component 
+        message="midi_access == null ? 'allow access' : 'Your browser does not support WebMIDI or it is not enabled. You can still use the editor.'"
+        arrows="midi_access == null ? true : false"
+        ng-show="!midi_access && !sysex && !$ctrl.editor"
+    ></screen-component>
+    <instructions-component ng-show="midi_access && !sysex && !$ctrl.editor"></instructions-component>
+    <div 
+        ng-show="(midi_access && sysex && !$ctrl.editor) || $ctrl.editor"
+        class="container-fluid mt-2" id="{{$ctrl.editor ? 'editor' : 'viewer'}}"
+    >
     <table class="table table-dark table-lcd">
         <thead>
             <tr>
-                <th colspan="4" class="fs-1 fw-light text-start border-bottom-0 px-4 pt-4 pb-0 m-0" style="color:#0CF">
-                    local d-35
+                <th colspan="{{$ctrl.editor ? 4 : 2}}" ng-class="{'w-50':!$ctrl.editor}" class="fs-1 fw-light text-start border-bottom-0 px-4 pt-4 pb-0 m-0" style="color:#0CF">
+                    {{$ctrl.editor ? 'MIDI-OUT' : 'MIDI-IN'}}
                 </th>
-                <th colspan="3" rowspan="2" class="text-end px-4 pt-4 pb-4 m-0">
+                <th colspan="{{$ctrl.editor ? 3 : 2}}" rowspan="2" class="text-end px-4 pt-4 pb-4 m-0">
                     <img style="width:40px;" class="negative" src="css/midi.svg" />
                 </th>
             </tr>
             <tr>
-                <td colspan="4" class="text-start pt-0 px-4 pb-4 m-0" style="line-height:1em">
-                    BEHRINGER FCB1010 FOOT CONTROLLER SYSEX EDITOR
+                <td colspan="{{$ctrl.editor ? 4 : 2}}" class="text-start pt-0 px-4 pb-4 m-0" style="line-height:1em">
+                    BEHRINGER FCB1010 FOOT CONTROLLER SYSEX {{$ctrl.editor ? 'EDITOR' : 'VIEWER'}}
                 </td>
             </tr>
             <tr>
-                <th colspan="2">FCB1010 <span class="badge bg-secondary">VIEWER</span></th>
-                <th>SETTING</th>
+                <th ng-show="$ctrl.editor" colspan="2">FCB1010 <span class="badge bg-secondary">VIEWER</span></th>
+                <th ng-show="$ctrl.editor">SETTING</th>
                 <th>SYSEX FILE</th>
                 <th>JSON FILE</th>
 				<th>HELP</th>
@@ -28,7 +40,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         </thead>
         <tbody>
             <tr>
-                <td>
+                <td ng-show="$ctrl.editor">
                     <span 
                         data-bs-toggle="popover" 
                         data-bs-title="{{popovers.viewer.read.title}}"
@@ -41,7 +53,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                         </button>
                     </span>
                 </td>
-                <td>
+                <td ng-show="$ctrl.editor">
                     <div class="input-group">
                         <button class="btn btn-outline-light" ng-click="getMidiOutDevices()"
                             data-bs-toggle="popover" 
@@ -68,7 +80,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                         </button>
                     </div>
                 </td>
-                <td>
+                <td ng-show="$ctrl.editor">
                     <div class="input-group">
                         <select data-bs-toggle="popover" 
                             data-bs-title="{{popovers.default_settings.list.content}}"
@@ -92,8 +104,9 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     <input id="sysex-file" class="d-none" type="file" accept=".syx"
                         onchange="angular.element(this).scope().openSysex(event)" />
                     <div class="d-grid">
-                        <div class="btn-group">
+                        <div ng-class="{'btn-group':$ctrl.editor}">
                             <button 
+                                ng-show="$ctrl.editor"
                                 data-bs-toggle="popover" 
                                 data-bs-title="{{popovers.sysex_file.read.title}}"
                                 data-bs-content="{{popovers.sysex_file.read.content}}" 
@@ -119,9 +132,11 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     <input id="json-file" class="d-none" type="file" accept=".json"
                         onchange="angular.element(this).scope().openJSON(event)" />
                     <div class="d-grid">
-                        <div class="btn-group">
-                            <button data-bs-toggle="popover" 
-                            data-bs-title="{{popovers.json_file.read.title}}"
+                        <div ng-class="{'btn-group':$ctrl.editor}">
+                            <button 
+                                ng-show="$ctrl.editor"
+                                data-bs-toggle="popover" 
+                                data-bs-title="{{popovers.json_file.read.title}}"
                                 data-bs-content="{{popovers.json_file.read.content}}"
                                 data-bs-placement="bottom" 
                                 data-bs-trigger="hover" class="btn btn-outline-light"
@@ -145,7 +160,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 </td>
 				<td>
 					<button 
-						id="help" 
+						id="{{$ctrl.editor ? 'editor' : 'viewer'}}-help" 
 						data-bs-toggle="popover" 
 						data-bs-title="{{popovers.help.message.title}}"
 						data-bs-content="{{popovers.help.message.content}}"
@@ -420,7 +435,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr ng-show="$ctrl.editor">
                 <th>Write Status</th>
                 <td colspan="6" class="text-start">
                     <span ng-show="fcb1010_configuration_form.$valid">
@@ -480,76 +495,109 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         <tbody>
             <tr>
                 <td data-bs-toggle="popover" 
-                data-bs-title="{{popovers.global.direct_select.title}}"
+                    data-bs-title="{{popovers.global.direct_select.title}}"
                     data-bs-content="{{popovers.global.direct_select.content}}"
                     data-bs-placement="bottom" 
                     data-bs-trigger="hover" 
-                    class="lcd pointer"
-                    ng-class="{off : !sysex.direct_select}" ng-click="sysex.direct_select = !sysex.direct_select">
-                    {{sysex.direct_select ? "ON" : "OFF"}}
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !sysex.direct_select}" 
+                        ng-click="sysex.direct_select = !sysex.direct_select"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{sysex.direct_select ? "ON" : "OFF"}}
+                    </button>
                 </td>
                 <td data-bs-toggle="popover" 
-                data-bs-title="{{popovers.global.switch_1_up.title}}"
+                    data-bs-title="{{popovers.global.switch_1_up.title}}"
                     data-bs-content="{{popovers.global.switch_1_up.content}}"
                     data-bs-placement="bottom" 
                     data-bs-trigger="hover" 
-                    class="lcd pointer"
-                    ng-class="{off : !sysex.switch_1_up}" ng-click="sysex.switch_1_up = !sysex.switch_1_up">
-                    {{sysex.switch_1_up ? "UP" : "OFF"}}
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !sysex.switch_1_up}" 
+                        ng-click="sysex.switch_1_up = !sysex.switch_1_up"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{sysex.switch_1_up ? "UP" : "OFF"}}
+                    </button>
                 </td>
-                <td data-bs-toggle="popover" 
-                data-bs-title="{{popovers.global.switch_2_down.title}}"
+                <td 
+                    data-bs-toggle="popover" 
+                    data-bs-title="{{popovers.global.switch_2_down.title}}"
                     data-bs-content="{{popovers.global.switch_2_down.content}}"
                     data-bs-placement="bottom" 
-                    data-bs-trigger="hover" 
-                    class="lcd pointer"
-                    ng-class="{off : !sysex.switch_2_down}" ng-click="sysex.switch_2_down = !sysex.switch_2_down">
-                    {{sysex.switch_2_down ? "DOWN" : "OFF"}}
+                    data-bs-trigger="hover"                
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !sysex.switch_2_down}" 
+                        ng-click="sysex.switch_2_down = !sysex.switch_2_down"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{sysex.switch_2_down ? "DOWN" : "OFF"}}
+                    </button>
                 </td>
-                <td data-bs-toggle="popover" 
-                data-bs-title="{{popovers.global.merge.title}}"
+                <td 
+                    data-bs-toggle="popover" 
+                    data-bs-title="{{popovers.global.merge.title}}"
                     data-bs-content="{{popovers.global.merge.content}}"
                     data-bs-placement="bottom" 
                     data-bs-trigger="hover" 
-                    class="lcd pointer"
-                    ng-class="{off : !sysex.merge}" ng-click="sysex.merge = !sysex.merge">
-                    {{sysex.merge ? "ON" : "OFF"}}
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !sysex.merge}" 
+                        ng-click="sysex.merge = !sysex.merge"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{sysex.merge ? "ON" : "OFF"}}
+                    </button>
                 </td>
-                <td data-bs-toggle="popover" 
-                data-bs-title="{{popovers.global.running_status.title}}"
+                <td 
+                    data-bs-toggle="popover" 
+                    data-bs-title="{{popovers.global.running_status.title}}"
                     data-bs-content="{{popovers.global.running_status.content}}"
                     data-bs-placement="bottom" 
                     data-bs-trigger="hover" 
-                    class="lcd pointer"
-                    ng-class="{off : !sysex.running_status}" ng-click="sysex.running_status = !sysex.running_status">
-                    {{sysex.running_status ? "ON" : "OFF"}}
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !sysex.running_status}" 
+                        ng-click="sysex.running_status = !sysex.running_status"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{sysex.running_status ? "ON" : "OFF"}}
+                    </button>
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_1_min.title}}"
                         data-bs-content="{{popovers.global.expression_1_min.content}}"
-                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
+                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control"
                         ng-model="sysex.expression_1_min" min="0" max="{{sysex.expression_1_max}}" step="1">
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_1_max.title}}"
                         data-bs-content="{{popovers.global.expression_1_max.content}}"
-                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
+                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control"
                         ng-model="sysex.expression_1_max" min="{{sysex.expression_1_min}}" max="255" step="1">
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_2_min.title}}"
                         data-bs-content="{{popovers.global.expression_2_min.content}}"
-                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
+                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control"
                         ng-model="sysex.expression_2_min" min="0" max="{{sysex.expression_2_max}}" step="1">
                 </td>
                 <td class="lcd">
                     <input data-bs-toggle="popover" 
                     data-bs-title="{{popovers.global.expression_2_max.title}}"
                         data-bs-content="{{popovers.global.expression_2_max.content}"
-                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-required="true" class="form-control"
+                        data-bs-placement="bottom" data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control"
                         ng-model="sysex.expression_2_max" min="{{sysex.expression_2_min}}" max="255" step="1">
                 </td>
             </tr>
@@ -577,60 +625,60 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 <td class="lcd yellow">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.program_1.midi.title}}"
                         data-bs-content="{{popovers.program_1.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.program_1_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.program_1_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.program_2.midi.title}}"
                         data-bs-content="{{popovers.program_2.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.program_2_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.program_2_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.program_3.midi.title}}"
                         data-bs-content="{{popovers.program_3.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.program_3_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.program_3_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.program_4.midi.title}}"
                         data-bs-content="{{popovers.program_4.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.program_4_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.program_4_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.program_5.midi.title}}"
                         data-bs-content="{{popovers.program_5.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.program_5_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.program_5_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow" colspan="2">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.control_1.midi.title}}"
                         data-bs-content="{{popovers.control_1.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.control_1_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.control_1_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow" colspan="2">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.control_2.midi.title}}"
                         data-bs-content="{{popovers.control_2.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.control_2_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.control_2_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow" colspan="3">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.midi.title}}"
                         data-bs-content="{{popovers.expression_1.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.expression_1_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.expression_1_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow" colspan="3">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.midi.title}}"
                         data-bs-content="{{popovers.expression_2.midi.content}}" data-bs-placement="bottom"
-                        data-bs-trigger="hover" type="number" ng-required="true" class="form-control" ng-model="sysex.expression_2_channel"
+                        data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="sysex.expression_2_channel"
                         min="0" max="15" step="1">
                 </td>
                 <td class="lcd yellow">
                     <input data-bs-toggle="popover" data-bs-title="{{popovers.note.midi.title}}"
-                        data-bs-content="{{popovers.note.midi.content}}" data-bs-trigger="hover" type="number" ng-required="true"
+                        data-bs-content="{{popovers.note.midi.content}}" data-bs-trigger="hover" type="number" ng-disabled="!$ctrl.editor" ng-required="true"
                         class="form-control" ng-model="sysex.note_channel" min="0" max="15" step="1">
                 </td>
             </tr>
@@ -671,7 +719,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 <td>MAX</td>
                 <td colspan="2"></td>
             </tr>
-            <tr class="border-bottom-dark" ng-show="!bank_power_mode">
+            <tr class="border-bottom-dark" ng-show="!bank_power_mode && $ctrl.editor">
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.all_bank.title}}"
                     data-bs-content="{{popovers.general.all_bank.content}}" data-bs-placement="bottom"
                     data-bs-trigger="hover" class="lcd">
@@ -682,130 +730,146 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     data-bs-trigger="hover" class="context-cursor" ng-click="bank_power_mode = !bank_power_mode">
                     <b class="pedal">ALL</b>
                 </td>
-                <td data-bs-toggle="popover" data-bs-title="{{popovers.switch_1.on.title}}"
-                    data-bs-content="{{popovers.switch_1.on.content+popovers.bank_change}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd blue pointer"
-                    ng-class="{off : !bank_presets[$index].switch_1.on}"
-                    ng-click="bank_presets[$index].switch_1.on = !bank_presets[$index].switch_1.on">
-                    {{bank_presets[$index].switch_1.on ? "ON" : "OFF"}}
+                <td 
+                    data-bs-toggle="popover" 
+                    data-bs-title="{{popovers.switch_1.on.title}}"
+                    data-bs-content="{{popovers.switch_1.on.content+popovers.bank_change}}" 
+                    data-bs-placement="bottom"
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch blue text-uppercase" 
+                        ng-class="{off : !bank_presets[$index].switch_1.on}" 
+                        ng-click="bank_presets[$index].switch_1.on = !bank_presets[$index].switch_1.on"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{bank_presets[$index].switch_1.on ? "ON" : "OFF"}}
+                    </button>
                 </td>
-                <td data-bs-toggle="popover" data-bs-title="{{popovers.switch_2.on.title}}"
-                    data-bs-content="{{popovers.switch_2.on.content+popovers.bank_change}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd blue pointer"
-                    ng-class="{off : !bank_presets[$index].switch_2.on}"
-                    ng-click="bank_presets[$index].switch_2.on = !bank_presets[$index].switch_2.on">
-                    {{bank_presets[$index].switch_2.on ? "ON" : "OFF"}}
+                <td 
+                    data-bs-toggle="popover" data-bs-title="{{popovers.switch_2.on.title}}"
+                    data-bs-content="{{popovers.switch_2.on.content+popovers.bank_change}}" 
+                    data-bs-placement="bottom"
+                    data-bs-trigger="hover" 
+                >
+                    <button 
+                    class="btn btn-outline-danger btn-switch blue text-uppercase" 
+                    ng-class="{off : !bank_presets[$index].switch_2.on}" 
+                    ng-click="bank_presets[$index].switch_2.on = !bank_presets[$index].switch_2.on"
+                    ng-disabled="!$ctrl.editor"
+                    >
+                        {{bank_presets[$index].switch_2.on ? "ON" : "OFF"}}
+                    </button>
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_1.value_0.title}}"
                     data-bs-content="{{popovers.program_1.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].program_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_1.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_1.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_2.value_0.title}}"
                     data-bs-content="{{popovers.program_2.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].program_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_2.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_2.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_3.value_0.title}}"
                     data-bs-content="{{popovers.program_3.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].program_3.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_3.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_3.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_4.value_0.title}}"
                     data-bs-content="{{popovers.program_4.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].program_4.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_4.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_4.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_5.value_0.title}}"
                     data-bs-content="{{popovers.program_5.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].program_5.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_5.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].program_5.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_1.value_0.title}}"
                     data-bs-content="{{popovers.control_1.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].control_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_1.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_1.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_1.value_1.title}}"
                     data-bs-content="{{popovers.control_1.value_1.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].control_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_1.value_1" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_1.value_1" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_2.value_0.title}}"
                     data-bs-content="{{popovers.control_2.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].control_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_2.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_2.value_0" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_2.value_1.title}}"
                     data-bs-content="{{popovers.control_2.value_1.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].control_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_2.value_1" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].control_2.value_1" min="0"
                         max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.value_0.title}}"
                     data-bs-content="{{popovers.expression_1.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].expression_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_1.value_0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_1.value_0"
                         min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.value_1.title}}"
                     data-bs-content="{{popovers.expression_1.value_1.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].expression_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_1.value_1"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_1.value_1"
                         min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.value_2.title}}"
                     data-bs-content="{{popovers.expression_1.value_2.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].expression_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_1.value_2"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_1.value_2"
                         min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.value_0.title}}"
                     data-bs-content="{{popovers.expression_2.value_0.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].expression_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_2.value_0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_2.value_0"
                         min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.value_1.title}}"
                     data-bs-content="{{popovers.expression_2.value_1.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].expression_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_2.value_1"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_2.value_1"
                         min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.value_2.title}}"
                     data-bs-content="{{popovers.expression_2.value_2.content+popovers.bank_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd blue"
                     ng-class="{off : !bank_presets[$index].expression_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_2.value_2"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].expression_2.value_2"
                         min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.note.value_0.title}}"
                     data-bs-content="{{popovers.note.value_0.content+popovers.bank_change}}" data-bs-placement="bottom"
                     data-bs-trigger="hover" class="lcd blue" ng-class="{off : !bank_presets[$index].note.on}"
                     tooltip="{{bank_presets[$index].note.value_0 | midinote}}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="bank_presets[$index].note.value_0" min="0"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="bank_presets[$index].note.value_0" min="0"
                         max="127" step="1">
                 </td>
             </tr>
@@ -922,7 +986,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 ng-show="!power_mode && !increment_mode">
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.bank.title}}"
                     data-bs-content="{{popovers.general.bank.content}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd context-cursor" ng-click="toggleIncrementMode()">
+                    data-bs-trigger="hover" class="lcd" ng-class="{'context-cursor':$ctrl.editor}" ng-click="toggleIncrementMode()">
                     {{$parent.$index | padding:2}}
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.preset.title}}"
@@ -930,111 +994,131 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     data-bs-trigger="hover" class="context-cursor" ng-click="power_mode = !power_mode">
                     <b class="pedal">{{$index+1}}</b>
                 </td>
-                <td data-bs-toggle="popover" data-bs-title="{{popovers.switch_1.on.title}}"
-                    data-bs-content="{{popovers.switch_1.on.content+popovers.preset_change}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd pointer" ng-class="{off : !p.switch_1.on}"
-                    ng-click="p.switch_1.on = !p.switch_1.on">
-                    {{p.switch_1.on ? "ON" : "OFF"}}
+                <td 
+                    data-bs-toggle="popover" 
+                    data-bs-title="{{popovers.switch_1.on.title}}"
+                    data-bs-content="{{popovers.switch_1.on.content+popovers.preset_change}}" 
+                    data-bs-placement="bottom"
+                    data-bs-trigger="hover" 
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !p.switch_1.on}" 
+                        ng-click="p.switch_1.on = !p.switch_1.on"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{p.switch_1.on ? "ON" : "OFF"}}
+                    </button>  
                 </td>
-                <td data-bs-toggle="popover" data-bs-title="{{popovers.switch_2.on.title}}"
-                    data-bs-content="{{popovers.switch_2.on.content+popovers.preset_change}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd pointer" ng-class="{off : !p.switch_2.on}"
-                    ng-click="p.switch_2.on = !p.switch_2.on">
-                    {{p.switch_2.on ? "ON" : "OFF"}}
+                <td 
+                    data-bs-toggle="popover" 
+                    data-bs-title="{{popovers.switch_2.on.title}}"
+                    data-bs-content="{{popovers.switch_2.on.content+popovers.preset_change}}" 
+                    data-bs-placement="bottom"
+                    data-bs-trigger="hover" 
+                >
+                    <button 
+                        class="btn btn-outline-danger btn-switch text-uppercase" 
+                        ng-class="{off : !p.switch_2.on}" 
+                        ng-click="p.switch_2.on = !p.switch_2.on"
+                        ng-disabled="!$ctrl.editor"
+                    >
+                        {{p.switch_2.on ? "ON" : "OFF"}}
+                    </button> 
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_1.value_0.title}}"
                     data-bs-content="{{popovers.program_1.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.program_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.program_1.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.program_1.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_2.value_0.title}}"
                     data-bs-content="{{popovers.program_2.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.program_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.program_2.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.program_2.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_3.value_0.title}}"
                     data-bs-content="{{popovers.program_3.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.program_3.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.program_3.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.program_3.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_4.value_0.title}}"
                     data-bs-content="{{popovers.program_4.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.program_4.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.program_4.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.program_4.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.program_5.value_0.title}}"
                     data-bs-content="{{popovers.program_5.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.program_5.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.program_5.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.program_5.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_1.value_0.title}}"
                     data-bs-content="{{popovers.control_1.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd yellow"
                     ng-class="{off : !p.control_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.control_1.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.control_1.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_1.value_1.title}}"
                     data-bs-content="{{popovers.control_1.value_1.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd yellow"
                     ng-class="{off : !p.control_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.control_1.value_1" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.control_1.value_1" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_2.value_0.title}}"
                     data-bs-content="{{popovers.control_2.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.control_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.control_2.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.control_2.value_0" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.control_2.value_1.title}}"
                     data-bs-content="{{popovers.control_2.value_1.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd" ng-class="{off : !p.control_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.control_2.value_1" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.control_2.value_1" min="0" max="127" step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.value_0.title}}"
                     data-bs-content="{{popovers.expression_1.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd yellow"
                     ng-class="{off : !p.expression_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.expression_1.value_0" min="0" max="127"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.expression_1.value_0" min="0" max="127"
                         step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.value_1.title}}"
                     data-bs-content="{{popovers.expression_1.value_1.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd yellow"
                     ng-class="{off : !p.expression_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.expression_1.value_1" min="0" max="127"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.expression_1.value_1" min="0" max="127"
                         step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_1.value_2.title}}"
                     data-bs-content="{{popovers.expression_1.value_2.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd yellow"
                     ng-class="{off : !p.expression_1.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.expression_1.value_2" min="0" max="127"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.expression_1.value_2" min="0" max="127"
                         step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.value_0.title}}"
                     data-bs-content="{{popovers.expression_2.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd"
                     ng-class="{off : !p.expression_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.expression_2.value_0" min="0" max="127"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.expression_2.value_0" min="0" max="127"
                         step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.value_1.title}}"
                     data-bs-content="{{popovers.expression_2.value_1.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd"
                     ng-class="{off : !p.expression_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.expression_2.value_1" min="0" max="127"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.expression_2.value_1" min="0" max="127"
                         step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.expression_2.value_2.title}}"
                     data-bs-content="{{popovers.expression_2.value_2.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd"
                     ng-class="{off : !p.expression_2.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.expression_2.value_2" min="0" max="127"
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.expression_2.value_2" min="0" max="127"
                         step="1">
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.note.value_0.title}}"
                     data-bs-content="{{popovers.note.value_0.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" class="lcd yellow" ng-class="{off : !p.note.on}">
-                    <input type="number" ng-required="true" class="form-control" ng-model="p.note.value_0" min="0" max="127" step="1">
+                    <input type="number" ng-disabled="!$ctrl.editor" ng-required="true" class="form-control" ng-model="p.note.value_0" min="0" max="127" step="1">
                 </td>
             </tr>
             <tr class="increment-buttons" ng-show="increment_mode">
@@ -1264,7 +1348,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.paste.title}}"
                     data-bs-content="{{popovers.general.paste.content}}" data-bs-placement="bottom"
                     data-bs-trigger="hover">
-                    <button class="btn btn-outline-warning btn-sm" ng-click="pastePreset($parent.$index,$index)"
+                    <button class="btn btn-outline-warning btn-sm" ng-click="pastePreset($parent.$index,$index)" ng-show="$ctrl.editor"
                         ng-disabled="!$root.preset_clipboard">
                         <i class="fa-solid fa-paste"></i>
                     </button>
@@ -1272,49 +1356,49 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.program_1.on.title}}"
                     data-bs-content="{{popovers.program_1.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" ng-class="{off : !p.program_1.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_1.on = !p.program_1.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_1.on = !p.program_1.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.program_2.on.title}}"
                     data-bs-content="{{popovers.program_2.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" ng-class="{off : !p.program_2.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_2.on = !p.program_2.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_2.on = !p.program_2.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.program_3.on.title}}"
                     data-bs-content="{{popovers.program_3.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" ng-class="{off : !p.program_3.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_3.on = !p.program_3.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_3.on = !p.program_3.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.program_4.on.title}}"
                     data-bs-content="{{popovers.program_4.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" ng-class="{off : !p.program_4.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_4.on = !p.program_4.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_4.on = !p.program_4.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.program_5.on.title}}"
                     data-bs-content="{{popovers.program_5.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" ng-class="{off : !p.program_5.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_5.on = !p.program_5.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.program_5.on = !p.program_5.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.control_1.on.title}}"
                     data-bs-content="{{popovers.control_1.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" colspan="2" ng-class="{off : !p.control_1.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.control_1.on = !p.control_1.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.control_1.on = !p.control_1.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.control_2.on.title}}"
                     data-bs-content="{{popovers.control_2.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" colspan="2" ng-class="{off : !p.control_2.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.control_2.on = !p.control_2.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.control_2.on = !p.control_2.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
@@ -1322,7 +1406,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     data-bs-content="{{popovers.expression_1.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" colspan="3"
                     ng-class="{off : !p.expression_1.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.expression_1.on = !p.expression_1.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.expression_1.on = !p.expression_1.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
@@ -1330,14 +1414,14 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     data-bs-content="{{popovers.expression_2.on.content+popovers.preset_change}}"
                     data-bs-placement="bottom" data-bs-trigger="hover" colspan="3"
                     ng-class="{off : !p.expression_2.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.expression_2.on = !p.expression_2.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.expression_2.on = !p.expression_2.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
                 <th data-bs-toggle="popover" data-bs-title="{{popovers.note.on.title}}"
                     data-bs-content="{{popovers.note.on.content+popovers.preset_change}}" data-bs-placement="bottom"
                     data-bs-trigger="hover" ng-class="{off : !p.note.on}">
-                    <button class="btn btn-outline-danger btn-sm" ng-click="p.note.on = !p.note.on">
+                    <button class="btn btn-outline-danger btn-sm" ng-click="p.note.on = !p.note.on" ng-show="$ctrl.editor">
                         <i class="fa-solid fa-power-off"></i>
                     </button>
                 </th>
@@ -1383,7 +1467,8 @@ angular.module('fcb1010EditorApp').component("localComponent", {
 </div>
     `,
     controller: function ($rootScope, $scope, fcb1010Service, midiService, fileService) {
-        $scope.sysex = fcb1010Service.getTemplate();
+        this.editor = true;
+        $scope.sysex = null;
         $scope.preset_properties = fcb1010Service.getPresetProperties();
         $scope.bank_presets = fcb1010Service.getBankPresetTemplate();
         $scope.popovers = {
@@ -1720,7 +1805,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         $scope.midi_out = null;
         $scope.midi_out_test = null;
         $scope.midi_out_devices = [];
-        $scope.midiAccess = null;
+        $scope.midi_access = null;
         $scope.default_settings = fcb1010Service.DEFAULT_SETTINGS;
         $scope.default_setting = $scope.default_settings[0];
         $scope.increment_start = null;
@@ -1803,6 +1888,17 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             source: "Editor",
             message: "Configuration sent to FCB1010. Press and hold 'DOWN' to load it (this will exit configuration mode)."
         };
+
+        RECEIVE_FAILURE ={
+			success: false,
+			source:"Viewer",
+			message:"Couldn't receive configuration from FCB1010, please try again."
+		};
+		RECEIVE_SUCCESS ={
+			success: true,
+			source:"Viewer",
+			message:"Data received successfully from FCB1010"
+		};
 
         $scope.toggleTest = function(){
             $scope.test_mode = !$scope.test_mode;
@@ -1909,6 +2005,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         }
 
         $scope.toggleIncrementMode = function () {
+            if(!this.editor) return;
             $scope.increment_mode = !$scope.increment_mode;
         }
 
@@ -2046,7 +2143,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         $scope.send = function (data,fcb1010) {
             var result = false;
             var device = fcb1010 ? $scope.midi_out : $scope.midi_out_test;
-            $scope.midiAccess.outputs.forEach(function (output) {
+            $scope.midi_access.outputs.forEach(function (output) {
                 if (output.id == device.id) {
                     output.send(data);
                     result = true; 
@@ -2057,7 +2154,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
 
         $scope.getMidiOutDevices = function () {
             $scope.midi_out_devices = [];
-            $scope.midiAccess.outputs.forEach(function (output) {
+            $scope.midi_access.outputs.forEach(function (output) {
                 $scope.midi_out_devices.push({
                     id: output.id,
                     name: output.manufacturer + " " + output.name
@@ -2099,7 +2196,6 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         }
 
         $scope.openJSON = function (event) {
-            console.log("JSON");
             var files = event.target.files;
             if (files.length === 0) return;
             var file = files[0];
@@ -2119,14 +2215,15 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         }
 
         $scope.toggleHelp = function () {
+            var top = this.editor ? "#editor" : "#viewer";
             $scope.popover = !$scope.popover;
-            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            var popoverTriggerList = [].slice.call(document.querySelectorAll(top+' * [data-bs-toggle="popover"]'));
             if ($scope.popover) {
                 popoverTriggerList.forEach(function (popoverTriggerEl) {
                     var popover = new bootstrap.Popover(popoverTriggerEl);
                     $scope.popover_triggers.push(popover);
                 });
-                document.getElementById("help").dispatchEvent(new MouseEvent('mouseover'));
+                document.getElementById(top+"-help").dispatchEvent(new MouseEvent('mouseover'));
             } else {
                 $scope.popover_triggers.forEach(function (e) {
                     e.dispose();
@@ -2135,32 +2232,58 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             }
         }
 
-        function init() {
-            $scope.bank_presets.forEach(function (e, i) {
-                $scope.preset_properties.forEach(function (a, b) {
-                    var expression = 'bank_presets[' + i + '].';
-                    expression += a[0] + ".";
-                    expression += a[1];
-                    $scope.$watch(expression, function (newValue, oldValue, scope) {
-                        if (newValue !== oldValue) {
-                            $scope.sysex.banks[i].forEach(function (x, y) {
-                                $scope.sysex.banks[i][y][a[0]][a[1]] = newValue;
-                            });
-                        }
+        $scope.addMIDIEventListener = function(access){
+			access.inputs.forEach(function (input) {
+				input.onmidimessage = function (event) {
+					$scope.$apply(function () {
+						if(event.data[0] != 240) return;
+						$scope.is_receiving = true;
+						var sysex = fcb1010Service.decode(event.data);
+						if (sysex != null){
+							$scope.sysex = sysex;
+							$rootScope.remote_sysex = sysex;
+							$rootScope.toast = RECEIVE_SUCCESS;
+						}else{
+							$rootScope.toast = RECEIVE_FAILURE;
+						}
+						$scope.is_receiving = false;
+					});
+				};
+			});
+		}
+
+        this.$onInit = function(){
+            var _this = this;
+            if(_this.editor){
+                $scope.sysex = fcb1010Service.getTemplate();
+                $scope.bank_presets.forEach(function (e, i) {
+                    $scope.preset_properties.forEach(function (a, b) {
+                        var expression = 'bank_presets[' + i + '].';
+                        expression += a[0] + ".";
+                        expression += a[1];
+                        $scope.$watch(expression, function (newValue, oldValue, scope) {
+                            if (newValue !== oldValue) {
+                                $scope.sysex.banks[i].forEach(function (x, y) {
+                                    $scope.sysex.banks[i][y][a[0]][a[1]] = newValue;
+                                });
+                            }
+                        });
                     });
                 });
-            });
+            }
             midiService.requestMIDIAccess()
                 .then(function (access) {
-                    $scope.midiAccess = access;
+                    $scope.midi_access = access;
                     $scope.getMidiOutDevices();
+                    if(!_this.editor){
+                        $scope.addMIDIEventListener(access);
+                    }
                 })
                 .catch(function (err) {
+                    $scope.midi_access = false;
                     $rootScope.toast = MIDI_FAILURE;
                 });
         }
-
-        init();
 
     }
 });

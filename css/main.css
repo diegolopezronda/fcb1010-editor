@@ -15,7 +15,6 @@ html {
     font-family: 'DS-Digital', monospace;
     color: red;
     text-shadow: 0px 0px 2px red;
-    background-color: #110000;
     padding: 0px 0.3em;
 }
 
@@ -23,7 +22,6 @@ td.lcd {
     font-family: 'DS-Digital', monospace;
     color: red !important;
     text-shadow: 0px 0px 2px red !important;
-    background-color: #110000 !important;
     font-size: 24px;
 
 }
@@ -32,8 +30,6 @@ td.lcd.yellow {
     font-family: 'DS-Digital', monospace;
     color: #F90 !important;
     text-shadow: 0px 0px 2px #F90 !important;
-    background-color: #110000 !important;
-
 }
 
 
@@ -81,7 +77,7 @@ td {
 }
 
 .off {
-    opacity: 0.25;
+    opacity: 0.25!important;
 }
 
 .pedal {
@@ -104,7 +100,7 @@ td {
 }
 
 input[type=number] {
-    background: black;
+    background: black!important;
     color: red !important;
     text-shadow: 0 0 2px red;
     padding: 0px;
@@ -129,6 +125,11 @@ input[type=number] {
 
 td.lcd.blue {
     color: #0FC !important;
+    text-shadow: 0 0 2px #0FC !important;
+}
+
+.blue{
+    color: #0FC!important;
     text-shadow: 0 0 2px #0FC !important;
 }
 
@@ -409,4 +410,24 @@ th {
 
 .fcb1010-test{
     background: rgb(33, 37, 41)!important;
+}
+
+.btn-switch {
+    color: red;
+    text-shadow: 0 0 2px red;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    font-size: 24px;
+    font-family: 'DS-Digital';
+    font-weight: bold;
+}
+
+.btn-switch:hover,.btn-switch:active{
+    color: red;
+    background:black;
+}
+
+.btn-switch:disabled {
+    color: red;
 }

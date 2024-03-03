@@ -1,4 +1,9 @@
 angular.module('fcb1010EditorApp').component("screenComponent", {
+	controllerAs:"$ctrl",
+	bindings:{
+		arrows: "<",
+		message: "<"
+	},
     template:
     `
 <div class="screen">
@@ -6,8 +11,8 @@ angular.module('fcb1010EditorApp').component("screenComponent", {
 	<thead>
 		<tr>
 			<td class="lcd-screen">
-				<span class="dash-animation">&lt;&lt;&lt;</span>
-				click on allow
+				<span ng-show="$ctrl.arrows" class="dash-animation">&lt;&lt;&lt;</span>
+				{{$ctrl.message}}
 			</td>
 		</tr>
 	</thead>

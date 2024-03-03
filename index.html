@@ -4,18 +4,19 @@
 <head lang="en">
 	<meta charset="utf-8" />
 	<title>FCB1010 Editor</title>
+	<meta description="Behringer FCB1010 MIDI Foot Contoller online editor."/>
 	<link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
   	<link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+	<link href="lib/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
 	<link href="./css/ds-digital.css" rel="stylesheet" />
 	<link href="./css/main.css" rel="stylesheet" />
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+	<script src="lib/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
 	<script src="https://kit.fontawesome.com/9291331795.js" crossorigin="anonymous"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/angular-animate.min.js"></script>
 	<script src="ng/app.js"></script>
 	<script src="ng/filters/padding.js"></script>
 	<script src="ng/filters/midinote.js"></script>
@@ -23,8 +24,8 @@
 	<script src="ng/services/midiService.js"></script>
 	<script src="ng/services/fcb1010Service.js"></script>
 	<script src="ng/components/screenComponent.js"></script>
+	<script src="ng/components/instructionsComponent.js"></script>
 	<script src="ng/components/localComponent.js"></script>
-	<script src="ng/components/remoteComponent.js"></script>
 	<script src="ng/controllers/appController.js"></script>
 </head>
 
@@ -51,8 +52,8 @@
 		</div>
 	</header>
 	<main>
-		<remote-component ng-show="active_link.href == 'viewer'"></remote-component>
-		<local-component ng-show="active_link.href == 'editor'"></local-component>
+		<local-component editor="true" ng-show="active_link.href == 'editor'"></local-component>
+		<local-component editor="false" ng-show="active_link.href == 'viewer'"></local-component>
 		<div class="toast-container position-fixed m-auto top-0 bottom-0 start-0 end-0 p-3">
 			<div class="toast text-bg-light" ng-class="{show : $root.toast}" role="alert" aria-live="assertive"
 				aria-atomic="true">
