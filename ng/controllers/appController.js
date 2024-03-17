@@ -8,7 +8,7 @@ angular.module('fcb1010EditorApp').controller("AppController", function ($rootSc
         $scope.active_link = $scope.links[index];
     }
     window.onload = function() {
-  // Your code here
-  console.log('All resources loaded');
-};
+        document.getElementById('fallback-body').remove();
+        document.getElementById('ng-body').classList.remove('loading-hidden');
+    };
 });

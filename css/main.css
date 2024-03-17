@@ -286,3 +286,7 @@ th {
 .w-33{
     width:33%;
 }
+
+.loading-hidden{
+    display: none;
+}

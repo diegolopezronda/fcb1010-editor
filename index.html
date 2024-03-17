@@ -28,46 +28,70 @@
 	<script src="ng/controllers/appController.js"></script>
 </head>
 <body ng-controller="AppController" >
-	<header>
-		<div class="navbar navbar-dark bg-dark">
-			<div class="container-fluid ml-2 mr-2">
-				<a href="#" class="navbar-brand d-flex align-items-center">
-					<b>FCB1010</b>&nbsp;EDITOR
-				</a>
-				<div class="d-flex bg-dark text-light">
-					<div class="btn-group">
-						<button class="btn btn-outline-light text-uppercase btn-sm"
-							ng-repeat="link in links track by $index"
-							ng-class="{'btn-danger' : active_link.id == link.id}" ng-click="linkTo($index)">
-							{{link.label}}
-						</button>
-						<a class="btn btn-outline-warning text-uppercase btn-sm" href="https://buymeacoffee.com/dilopez" target="_blank">
-							☕️&nbsp;Buy me a Coffee!
-						</a>
+	<div id="fallback-body">
+		<header>
+			<div class="navbar navbar-dark bg-dark">
+				<div class="container-fluid ml-2 mr-2">
+					<a href="#" class="navbar-brand d-flex align-items-center">
+						<b>FCB1010</b>&nbsp;EDITOR
+					</a>
+				</div>
+			</div>
+		</header>
+		<main>
+			<div class="container-fluid text-center text-bg-dark bg-black full-height">
+				<div class="container-fluid text-center h-100">
+					<div class="row align-items-center justify-content-md-center h-100">
+					  <div class="col">
+						 <h3>Loading...</h3>
+					  </div>
+					</div>
+				  </div>
+			</div>
+		</main>
+	</div>
+	<div id="ng-body" class="loading-hidden">
+		<header>
+			<div class="navbar navbar-dark bg-dark">
+				<div class="container-fluid ml-2 mr-2">
+					<a href="#" class="navbar-brand d-flex align-items-center">
+						<b>FCB1010</b>&nbsp;EDITOR
+					</a>
+					<div class="d-flex bg-dark text-light">
+						<div class="btn-group">
+							<button class="btn btn-outline-light text-uppercase btn-sm"
+								ng-repeat="link in links track by $index"
+								ng-class="{'btn-danger' : active_link.id == link.id}" ng-click="linkTo($index)">
+								{{link.label}}
+							</button>
+							<a class="btn btn-outline-warning text-uppercase btn-sm" href="https://buymeacoffee.com/dilopez" target="_blank">
+								☕️&nbsp;Buy me a Coffee!
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</header>
-	<main>
-		<local-component editor="true" ng-show="active_link.href == 'editor'"></local-component>
-		<local-component editor="false" ng-show="active_link.href == 'viewer'"></local-component>
-		<div class="toast-container position-fixed m-auto top-0 bottom-0 start-0 end-0 p-3">
-			<div class="toast text-bg-light" ng-class="{show : $root.toast}" role="alert" aria-live="assertive"
-				aria-atomic="true">
-				<div class="toast-header">
-					<i class="fa-solid fa-square"
-						ng-class="{'text-primary' : $root.toast.success,'text-danger' : !$root.toast.success}"></i>
-					&nbsp;
-					<b class="me-auto">{{$root.toast.source}}</b>
-					<button type="button" class="btn-close" aria-label="Close" ng-click="$root.toast = null"></button>
-				</div>
-				<div class="toast-body text-center">
-					{{$root.toast.message}}
+		</header>
+		<main>
+			<local-component editor="true" ng-show="active_link.href == 'editor'"></local-component>
+			<local-component editor="false" ng-show="active_link.href == 'viewer'"></local-component>
+			<div class="toast-container position-fixed m-auto top-0 bottom-0 start-0 end-0 p-3">
+				<div class="toast text-bg-light" ng-class="{show : $root.toast}" role="alert" aria-live="assertive"
+					aria-atomic="true">
+					<div class="toast-header">
+						<i class="fa-solid fa-square"
+							ng-class="{'text-primary' : $root.toast.success,'text-danger' : !$root.toast.success}"></i>
+						&nbsp;
+						<b class="me-auto">{{$root.toast.source}}</b>
+						<button type="button" class="btn-close" aria-label="Close" ng-click="$root.toast = null"></button>
+					</div>
+					<div class="toast-body text-center">
+						{{$root.toast.message}}
+					</div>
 				</div>
 			</div>
-		</div>
-	</main>
+		</main>
+	</div>
 </body>
 
 </html>
