@@ -48,7 +48,7 @@ angular.module('fcb1010EditorApp').component("screenComponent", {
 			</tr>
 			<tr>
 				<td class="text-end p-1 border-0 w-25">
-					<span class="badge badge-pill text-bg-danger" style="width:2em">5</span>
+					<span class="badge badge-pill text-bg-danger" style="width:2em">4</span>
 				</td>
 				<td class="text-start p-1 border-0">
 					On your computer, Allow your browser to access MIDI devices (SysEx).
@@ -58,7 +58,7 @@ angular.module('fcb1010EditorApp').component("screenComponent", {
 			</tr>
 			<tr>
 				<td class="text-end p-1 border-0">
-					<span class="badge badge-pill text-bg-danger" style="width:2em">4</span>
+					<span class="badge badge-pill text-bg-danger" style="width:2em">5</span>
 				</td>
 				<td class="text-start p-1 border-0">
 					Back to the FCB1010, Press button <b>6</b>.
