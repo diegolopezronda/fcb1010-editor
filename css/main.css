@@ -7,7 +7,7 @@ html {
     font-family: 'Bai Jamjuree', sans-serif;
     font-size: 12pt;
     background-color: #ffffff;
-    background-image: url("light-aluminum.png");
+    background-image: url("../img/light-aluminum.png");
     text-transform: uppercase;
 }
 
@@ -52,7 +52,7 @@ td.lcd.yellow {
 }
 
 .midi {
-    background-image: url("midi-port.svg");
+    background-image: url("../img/midi-port.svg");
     background-repeat: no-repeat;
     background-position: center bottom;
     background-size: cover;
@@ -154,7 +154,7 @@ input[type=number]:focus {
 }
 
 .card-img-1 {
-    background-image: url('chrome-sysex-prompt.png');
+    background-image: url('../img/chrome-sysex-prompt.png');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -162,14 +162,14 @@ input[type=number]:focus {
 }
 
 .card-img-2 {
-    background-image: url('fcb1010-front.png');
+    background-image: url('../img/fcb1010-front.png');
     background-size: cover;
     background-repeat: no-repeat;
     height: 200px;
 }
 
 .card-img-3 {
-    background-image: url('pc-midi.jpg');
+    background-image: url('../img/pc-midi.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     height: 200px;
@@ -187,7 +187,7 @@ select {
 }
 
 th {
-    background-image: url("gravel.png");
+    background-image: url("../img/gravel.png");
 }
 
 
@@ -222,16 +222,16 @@ th {
 .screen {
     width: 100vw;
     height: calc(100vh - 56px);
-    background-size: 100% 100%;
-    background-image: url('retro-pc.gif');
+    background-size: 66vw auto;
+    background-image: url('../img/fcb1010.svg');
     background-repeat: no-repeat;
     background-color: black;
-    background-position: center bottom;
+    background-position: center center;
     position: relative;
 }
 
 .gif {
-    background-image: url('fcb1010-connection.gif');
+    background-image: url('../img/fcb1010.svg');
 }
 
 
@@ -245,7 +245,7 @@ th {
     width:100%;
     height:100%;
     top:0;
-    background-image: url('stripes.jpg');
+    background-image: url('../img/stripes.jpg');
     background-size: 20px auto;
     opacity:0.2;
 }
@@ -430,4 +430,12 @@ th {
 
 .btn-switch:disabled {
     color: red;
+}
+
+.full-height{
+    height:calc(100vh - 56px);
+}
+
+.w-33{
+    width:33%;
 }

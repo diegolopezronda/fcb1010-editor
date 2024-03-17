@@ -1,0 +1,56 @@
+@font-face {
+    font-family: 'DS-Digital';
+    src: url('DS-Digital-Bold.eot');
+    src: local('DS-Digital Bold'), local('DS-Digital-Bold'),
+        url('DS-Digital-Bold.eot?#iefix') format('embedded-opentype'),
+        url('DS-Digital-Bold.woff2') format('woff2'),
+        url('DS-Digital-Bold.woff') format('woff'),
+        url('DS-Digital-Bold.ttf') format('truetype'),
+        url('DS-Digital-Bold.svg#DS-Digital-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DS-Digital';
+    src: url('DS-Digital-BoldItalic.eot');
+    src: local('DS-Digital Bold Italic'), local('DS-Digital-BoldItalic'),
+        url('DS-Digital-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('DS-Digital-BoldItalic.woff2') format('woff2'),
+        url('DS-Digital-BoldItalic.woff') format('woff'),
+        url('DS-Digital-BoldItalic.ttf') format('truetype'),
+        url('DS-Digital-BoldItalic.svg#DS-Digital-BoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DS-Digital';
+    src: url('DS-Digital-Italic.eot');
+    src: local('DS-Digital Italic'), local('DS-Digital-Italic'),
+        url('DS-Digital-Italic.eot?#iefix') format('embedded-opentype'),
+        url('DS-Digital-Italic.woff2') format('woff2'),
+        url('DS-Digital-Italic.woff') format('woff'),
+        url('DS-Digital-Italic.ttf') format('truetype'),
+        url('DS-Digital-Italic.svg#DS-Digital-Italic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DS-Digital';
+    src: url('DS-Digital.eot');
+    src: local('DS-Digital'),
+        url('DS-Digital.eot?#iefix') format('embedded-opentype'),
+        url('DS-Digital.woff2') format('woff2'),
+        url('DS-Digital.woff') format('woff'),
+        url('DS-Digital.ttf') format('truetype'),
+        url('DS-Digital.svg#DS-Digital') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

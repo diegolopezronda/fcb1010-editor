@@ -5,11 +5,8 @@ angular.module('fcb1010EditorApp').component("localComponent", {
     controllerAs:'$ctrl',
     template: `
     <screen-component 
-        message="midi_access == null ? 'allow access' : 'Your browser does not support WebMIDI or it is not enabled. You can still use the editor.'"
-        arrows="midi_access == null ? true : false"
-        ng-show="!midi_access && !sysex && !$ctrl.editor"
+        ng-show="!sysex && !$ctrl.editor"
     ></screen-component>
-    <instructions-component ng-show="midi_access && !sysex && !$ctrl.editor"></instructions-component>
     <div 
         ng-show="(midi_access && sysex && !$ctrl.editor) || $ctrl.editor"
         class="container-fluid mt-2" id="{{$ctrl.editor ? 'editor' : 'viewer'}}"
@@ -21,7 +18,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                     {{$ctrl.editor ? 'MIDI-OUT' : 'MIDI-IN'}}
                 </th>
                 <th colspan="{{$ctrl.editor ? 3 : 2}}" rowspan="2" class="text-end px-4 pt-4 pb-4 m-0">
-                    <img style="width:40px;" class="negative" src="css/midi.svg" />
+                    <img style="width:40px;" class="negative" src="img/midi.svg" />
                 </th>
             </tr>
             <tr>

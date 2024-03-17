@@ -7,4 +7,8 @@ angular.module('fcb1010EditorApp').controller("AppController", function ($rootSc
     $scope.linkTo = function(index){
         $scope.active_link = $scope.links[index];
     }
+    window.onload = function() {
+  // Your code here
+  console.log('All resources loaded');
+};
 });
