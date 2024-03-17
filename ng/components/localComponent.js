@@ -9,7 +9,8 @@ angular.module('fcb1010EditorApp').component("localComponent", {
     ></screen-component>
     <div 
         ng-show="(midi_access && sysex && !$ctrl.editor) || $ctrl.editor"
-        class="container-fluid mt-2" id="{{$ctrl.editor ? 'editor' : 'viewer'}}"
+        class="container-fluid mt-2" 
+        id="{{$ctrl.editor ? 'editor' : 'viewer'}}"
     >
     <table class="table table-dark table-lcd">
         <thead>
@@ -164,9 +165,9 @@ angular.module('fcb1010EditorApp').component("localComponent", {
 						data-bs-placement="bottom" 
 						data-bs-trigger="hover"
 						class="btn btn-outline-light btn-sm text-uppercase" 
-						ng-click="toggleHelp()"
+						ng-click="$ctrl.toggleHelp()"
 					>
-						{{popover ? "ON" : "OFF"}}
+						{{$ctrl.popover ? "ON" : "OFF"}}
 					</button>
 				</td>
                 <td>
@@ -1441,9 +1442,6 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                         The <span class="badge text-bg-secondary">config</span> led on your FCB1010 must be on.
                     </p>
                     <p>
-                        <img class="rounded mx-auto d-block" src="css/fcb1010-connection.gif" />
-                    </p>
-                    <p>
                         <span class="badge rounded-pill text-bg-danger">2</span>
                         Press <b>7</b> on your FCB1010 (<b>7</b> led must be on).
                     </p>
@@ -1807,8 +1805,8 @@ angular.module('fcb1010EditorApp').component("localComponent", {
         $scope.default_setting = $scope.default_settings[0];
         $scope.increment_start = null;
         $scope.increment_hover = null;
-        $scope.popover = false;
-        $scope.popover_triggers = [];
+        this.popover = false;
+        this.popover_triggers = [];
         $scope.test_device = {
             bank:0,
             preset:null,
@@ -2211,21 +2209,22 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             reader.readAsText(file);
         }
 
-        $scope.toggleHelp = function () {
-            var top = this.editor ? "#editor" : "#viewer";
-            $scope.popover = !$scope.popover;
-            var popoverTriggerList = [].slice.call(document.querySelectorAll(top+' * [data-bs-toggle="popover"]'));
-            if ($scope.popover) {
+        this.toggleHelp = function () {
+            var _this = this;
+            var top = this.editor ? "editor" : "viewer";
+            this.popover = !this.popover;
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('#'+top+' * [data-bs-toggle="popover"]'));
+            if (this.popover) {
                 popoverTriggerList.forEach(function (popoverTriggerEl) {
                     var popover = new bootstrap.Popover(popoverTriggerEl);
-                    $scope.popover_triggers.push(popover);
+                    _this.popover_triggers.push(popover);
                 });
                 document.getElementById(top+"-help").dispatchEvent(new MouseEvent('mouseover'));
             } else {
-                $scope.popover_triggers.forEach(function (e) {
+                this.popover_triggers.forEach(function (e) {
                     e.dispose();
                 });
-                $scope.popover_triggers = [];
+                this.popover_triggers = [];
             }
         }
 

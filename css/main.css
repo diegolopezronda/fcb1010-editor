@@ -40,13 +40,6 @@ td.lcd.yellow {
     background-color: black;
 }
 
-/*
-.table-lcd tr:hover td{
-    color: #0F6 !important;
-    text-shadow: 0px 0px 2px #0F6 !important;
-}
-*/
-
 .midi-logo {
     height: 24px;
 }
@@ -149,32 +142,6 @@ input[type=number]:focus {
     cursor: copy !important;
 }
 
-.card {
-    font-family: 'Roboto', sans-serif;
-}
-
-.card-img-1 {
-    background-image: url('../img/chrome-sysex-prompt.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    height: 200px;
-}
-
-.card-img-2 {
-    background-image: url('../img/fcb1010-front.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 200px;
-}
-
-.card-img-3 {
-    background-image: url('../img/pc-midi.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 200px;
-}
-
 select {
     color: #0fC !important;
     text-shadow: 0 0 2px #0fc;
@@ -189,7 +156,6 @@ select {
 th {
     background-image: url("../img/gravel.png");
 }
-
 
 .lcd-screen{
     font-family: "VT323", monospace !important;
@@ -218,128 +184,9 @@ th {
     }
 }
 
-
-.screen {
-    width: 100vw;
-    height: calc(100vh - 56px);
-    background-size: 66vw auto;
-    background-image: url('../img/fcb1010.svg');
-    background-repeat: no-repeat;
-    background-color: black;
-    background-position: center center;
-    position: relative;
-}
-
-.gif {
-    background-image: url('../img/fcb1010.svg');
-}
-
-
-.screen table{
-    z-index:1010;
-    position: absolute;
-}
-
-.gif-overlay {
-    position: absolute;
-    width:100%;
-    height:100%;
-    top:0;
-    background-image: url('../img/stripes.jpg');
-    background-size: 20px auto;
-    opacity:0.2;
-}
-
-.manual{
-    position:absolute;
-    width:20%;
-    min-height:20%;
-    /*
-    font-family: "VT323", monospace !important;
-    font-family: 'Bai Jamjuree', sans-serif;
-    text-transform: uppercase;
-    font-weight: 400;
-    font-style: normal;
-    text-shadow: 0 0 2px #0FC !important;
-    color:#0FC!important;
-    font-size:24px;
-    */
-}
-
-.manual-1{
-
-    right:15%;
-    top:50%;
-    animation: m1-animation 33s infinite;
-}
-
-@keyframes m1-animation {
-    0% {
-        opacity: 0;
-    }
-    5% {
-        opacity: 1;
-    }
-}
-
-.manual-2{
-    right:40%;
-    top:50%;
-    animation: m2-animation 33s infinite;
-}
-
-@keyframes m2-animation {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 1;
-    }
-}
-
-
-.manual-3{
-    right:40%;
-    top:20%;
-    animation: m3-animation 33s infinite;
-}
-
-@keyframes m3-animation {
-    0% {
-        opacity: 0;
-    }
-    45% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-}
-
-.manual-4{
-    left:15%;
-    top:50%;
-    animation: m4-animation 33s infinite;
-}
-
 .rectangle{
     position:absolute;
     border:#0FC 3px solid;
-}
-
-@keyframes m4-animation {
-    0% {
-        opacity: 0;
-    }
-    75% {
-        opacity: 0;
-    }
-    80% {
-        opacity: 1;
-    }
 }
 
 .audiowide {
