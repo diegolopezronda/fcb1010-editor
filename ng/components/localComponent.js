@@ -984,7 +984,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
                 ng-show="!power_mode && !increment_mode">
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.bank.title}}"
                     data-bs-content="{{popovers.general.bank.content}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd" ng-class="{'context-cursor':$ctrl.editor}" ng-click="toggleIncrementMode()">
+                    data-bs-trigger="hover" class="lcd" ng-class="{'context-cursor':$ctrl.editor}" ng-click="$ctrl.toggleIncrementMode()">
                     {{$parent.$index | padding:2}}
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.preset.title}}"
@@ -1122,12 +1122,12 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             <tr class="increment-buttons" ng-show="increment_mode">
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.bank.title}}"
                     data-bs-content="{{popovers.general.bank.content}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="lcd context-cursor" ng-click="toggleIncrementMode()">
+                    data-bs-trigger="hover" class="lcd context-cursor" ng-click="$ctrl.toggleIncrementMode()">
                     {{$parent.$index | padding:2}}
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.preset.title}}"
                     data-bs-content="{{popovers.general.preset.content}}" data-bs-placement="bottom"
-                    data-bs-trigger="hover" class="context-cursor" ng-click="toggleIncrementMode()">
+                    data-bs-trigger="hover" class="context-cursor" ng-click="$ctrl.toggleIncrementMode()">
                     <b class="pedal">{{$index+1}}</b>
                 </td>
                 <td data-bs-toggle="popover" data-bs-title="{{popovers.general.increment_start.title}}"
@@ -1999,7 +1999,7 @@ angular.module('fcb1010EditorApp').component("localComponent", {
             modal.show();
         }
 
-        $scope.toggleIncrementMode = function () {
+        this.toggleIncrementMode = function () {
             if(!this.editor) return;
             $scope.increment_mode = !$scope.increment_mode;
         }
